@@ -56,7 +56,7 @@ class FaqModule extends Module
 
                 foreach ($languages as $key => $val)
                 {
-                    $links_label[$val['id_lang']] = $this->context->link->getModuleLink('faqmodule', 'Display', array('friendly_url' => 'all'));
+                    $links_label[$val['id_lang']] = $this->context->link->getModuleLink('faqmodule', 'displayfaqs', array('friendly_url' => 'all'));
                     $labels[$val['id_lang']] = 'FAQ';
                 }
 
@@ -103,7 +103,7 @@ class FaqModule extends Module
 
     public function uninstall()
     {
-        if (Module::isInstalled("blocktopmenu"))
+        if (Module::isInstalled('blocktopmenu'))
         {
             $shops = Shop::getContextListShopID();
 
@@ -232,12 +232,10 @@ class FaqModule extends Module
     public function hookModuleRoutes()
     {
         return array(
-            'module-faqmodule-Display' => array(
-                'controller' => 'Display',
-                'rule' => 'faqs{/:friendly_url}',
+            'module-faqmodule-displayfaqs' => array(
+                'controller' => 'displayfaqs',
+                'rule' => 'faqs/{friendly_url}',
                 'keywords' => array(
-                    'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                    'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                     'friendly_url' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'friendly_url')
                 ),
                 'params' => array(

@@ -23,8 +23,9 @@ class AdminFaqModuleController extends ModuleAdminController
         $products = Product::getProducts(1, 0, 0, 'id_product', 'ASC');
         $this->product_options = $products;
 
+        $this->model = new PrestaShopCollection('FAQ');
+
         $this->initList();
-        $this->displayForm();
     }
 
     private function initList()
@@ -67,10 +68,8 @@ class AdminFaqModuleController extends ModuleAdminController
         return $helper;
     }
 
-    public function displayForm()
+    public function renderForm()
     {
-        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-
         $this->fields_form = array(
                 'input'  => array(
                     'question'   => array(
@@ -129,15 +128,14 @@ class AdminFaqModuleController extends ModuleAdminController
                 ),
         );
 
-        $helper = new HelperForm();
-        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
-        $helper->languages = Language::getLanguages();
-        $helper->default_form_language = $default_lang;
-        $helper->allow_employee_form_lang = $default_lang;
+        if(Tools::getValue('updatefaqs') === '') {
+            $thisFaq = $this->model->where('id_faq', '=', Tools::getValue('id_faq'))->getResults();
+            $associated_products = $thisFaq[0]->associated_products;
+            if (strlen($associated_products) > 1) {
+                $this->fields_value['associated_products[]'] = unserialize($associated_products);
+            }
+        }
 
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
-        $helper->fields_value['question_1'] = 'Value';
-        $helper->generateForm($this->fields_form);
+        return parent::renderForm();
     }
 }

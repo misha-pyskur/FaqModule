@@ -2,7 +2,7 @@
 
 require_once (__DIR__ . '/../../classes/FAQ.php');
 
-class faqmoduleDisplayModuleFrontController extends ModuleFrontControllerCore
+class faqmoduleDisplayfaqsModuleFrontController extends ModuleFrontControllerCore
 {
     public function __construct()
     {
