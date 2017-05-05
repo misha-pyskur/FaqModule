@@ -1,10 +1,10 @@
 <?php
-if(!defined('_PS_VERSION_')) {
+if (!defined('_PS_VERSION_')) {
     exit;
 }
 
 require_once(dirname(__FILE__) . '/classes/FAQ.php');
-require_once(__DIR__ . '/../blocktopmenu/blocktopmenu.php');
+require_once(dirname(__FILE__) . '/../blocktopmenu/blocktopmenu.php');
 
 
 class FaqModule extends Module
@@ -14,7 +14,7 @@ class FaqModule extends Module
     protected $menu_top_links;
     protected $block_top_menu;
 
-    public function  __construct()
+    public function __construct()
     {
         $this->name = 'faqmodule';
         $this->tab = 'front_office_features';
@@ -44,19 +44,21 @@ class FaqModule extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        if (Module::isInstalled('blocktopmenu'))
-        {
+        if (Module::isInstalled('blocktopmenu')) {
             $languages = $this->context->controller->getLanguages();
             $shops = Shop::getContextListShopID();
 
-            foreach ($shops as $shop_id)
-            {
+            foreach ($shops as $shop_id) {
                 $links_label = array();
                 $labels = array();
 
-                foreach ($languages as $key => $val)
-                {
-                    $links_label[$val['id_lang']] = $this->context->link->getModuleLink('faqmodule', 'displayfaqs', array('friendly_url' => 'all'));
+                foreach ($languages as $val) {
+                    $links_label[$val['id_lang']] = $this->context->link->getModuleLink(
+                        'faqmodule',
+                        'displayfaqs',
+                        array('friendly_url' => 'all')
+                    );
+
                     $labels[$val['id_lang']] = 'FAQ';
                 }
 
@@ -69,7 +71,7 @@ class FaqModule extends Module
                 $topMenuLinks = Db::getInstance()->ExecuteS($sql);
 
                 if ($topMenuLinks) {
-                    $lastlink = array_pop($topMenuLinks );
+                    $lastlink = array_pop($topMenuLinks);
                     $this->link_id = $lastlink['id_linksmenutop'];
                     $this->link_name = 'LNK' . $this->link_id;
                 }
@@ -82,7 +84,13 @@ class FaqModule extends Module
                     $modBlocktopmenuItems = $this->link_name;
                 }
 
-                Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', $modBlocktopmenuItems, false, (int)$shop_group_id, (int)$shop_id);
+                Configuration::updateValue(
+                    'MOD_BLOCKTOPMENU_ITEMS',
+                    $modBlocktopmenuItems,
+                    false,
+                    (int)$shop_group_id,
+                    (int)$shop_id
+                );
             }
         }
 
@@ -97,36 +105,32 @@ class FaqModule extends Module
             $this->createAdminTab();
             return true;
         }
-
-
     }
 
     public function uninstall()
     {
-        if (Module::isInstalled('blocktopmenu'))
-        {
+        if (Module::isInstalled('blocktopmenu')) {
             $shops = Shop::getContextListShopID();
 
             $sql = 'SELECT * FROM '._DB_PREFIX_.'linksmenutop';
             $topMenuLinks = Db::getInstance()->ExecuteS($sql);
 
             if ($topMenuLinks) {
-                $lastlink = array_pop($topMenuLinks );
+                $lastlink = array_pop($topMenuLinks);
                 $this->link_id = $lastlink['id_linksmenutop'];
                 $this->link_name = 'LNK' . $this->link_id;
             }
 
             $modBlocktopmenuItems = Configuration::get('MOD_BLOCKTOPMENU_ITEMS');
-            $exploded = explode(',',$modBlocktopmenuItems);
+            $exploded = explode(',', $modBlocktopmenuItems);
 
-            if($needle = array_search($this->link_name, $exploded)) {
+            if ($needle = array_search($this->link_name, $exploded)) {
                 unset($exploded[$needle]);
             }
 
-            $exploded = implode(',',$exploded);
+            $exploded = implode(',', $exploded);
 
-            foreach ($shops as $shop_id)
-            {
+            foreach ($shops as $shop_id) {
                 $delete_link = $this->menu_top_links->remove($this->link_id, $shop_id);
             }
 
@@ -186,12 +190,14 @@ class FaqModule extends Module
         $tab->class_name = 'AdminFaqModule';
         $tab->module = 'faqmodule';
         $tab->id_parent = 0;
-        foreach($langs as $l){
+
+        foreach ($langs as $l) {
             $tab->name[$l['id_lang']] = $this->l('FAQ Module');
         }
+
         $tab->save();
         $tab_id = $tab->id;
-        Configuration::updateValue('FAQ_MODULE_TAB_ID',$tab_id);
+        Configuration::updateValue('FAQ_MODULE_TAB_ID', $tab_id);
         return true;
     }
 
@@ -207,10 +213,10 @@ class FaqModule extends Module
 
     public function hookDisplayHeader()
     {
-        $this->context->controller->addCSS(dirname(__FILE__) . '/css/main.css');
-        $this->context->controller->addCSS(dirname(__FILE__) . '/css/modal.css');
-        $this->context->controller->addJS(dirname(__FILE__) . '/js/main.js');
-        $this->context->controller->addJS(dirname(__FILE__) . '/js/modal.js');
+        $this->context->controller->addCSS(dirname(__FILE__) . '/views/css/main.css');
+        $this->context->controller->addCSS(dirname(__FILE__) . '/views/css/modal.css');
+        $this->context->controller->addJS(dirname(__FILE__) . '/views/js/main.js');
+        $this->context->controller->addJS(dirname(__FILE__) . '/views/js/modal.js');
     }
 
     public function hookDisplayProductTab()
@@ -220,7 +226,7 @@ class FaqModule extends Module
             $all_faqs = $this->model->getResults();
 
             $thisAssociatedQuestions = array();
-            foreach ($all_faqs as $key => $faqObject) {
+            foreach ($all_faqs as $faqObject) {
                 if ($faqObject->associated_products !== 'N;') {
                     $associated_products = unserialize($faqObject->associated_products);
                     if (is_array($associated_products)) {
@@ -245,7 +251,7 @@ class FaqModule extends Module
     public function hookModuleRoutes()
     {
         return array(
-            'module-faqmodule-displayfaqs' => array(
+            'module-faqmodule-display' => array(
                 'controller' => 'displayfaqs',
                 'rule' => 'faqs/{friendly_url}',
                 'keywords' => array(

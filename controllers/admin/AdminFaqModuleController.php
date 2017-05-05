@@ -1,7 +1,7 @@
 <?php
 
-require_once(__DIR__ . '/../../classes/FAQ.php');
-require_once(__DIR__ . '/../../faqmodule.php');
+require_once(dirname(__FILE__) . '/../../classes/FAQ.php');
+require_once(dirname(__FILE__) . '/../../faqmodule.php');
 
 class AdminFaqModuleController extends ModuleAdminController
 {
@@ -130,10 +130,10 @@ class AdminFaqModuleController extends ModuleAdminController
                 ),
         );
 
-        if(Tools::getValue('updatefaqs') === '') {
+        if (Tools::getValue('updatefaqs') === '') {
             $thisFaq = $this->model->where('id_faq', '=', Tools::getValue('id_faq'))->getResults();
             $associated_products = $thisFaq[0]->associated_products;
-            if (strlen($associated_products) > 1) {
+            if (Tools::strlen($associated_products) > 1) {
                 $this->fields_value['associated_products[]'] = unserialize($associated_products);
             }
         }

@@ -1,6 +1,6 @@
 <?php
 
-require_once (__DIR__ . '/../../classes/FAQ.php');
+require_once(dirname(__FILE__) . '/../../classes/FAQ.php');
 
 class faqmoduleDisplayfaqsModuleFrontController extends ModuleFrontControllerCore
 {
@@ -57,7 +57,7 @@ class faqmoduleDisplayfaqsModuleFrontController extends ModuleFrontControllerCor
     {
         $this->objectmodel->question[1] = Tools::getValue('question');
         $this->objectmodel->associated_products[] = Tools::getValue('id_product');
-        if($this->objectmodel->add()) {
+        if ($this->objectmodel->add()) {
             die(json_encode('Success'));
         } else {
             die(json_encode('Error'));
