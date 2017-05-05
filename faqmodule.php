@@ -178,7 +178,8 @@ class FaqModule extends Module
         return true;
     }
 
-    private function createAdminTab() {
+    private function createAdminTab()
+    {
         $langs = Language::getLanguages();
         $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         $tab = new Tab();
@@ -194,13 +195,20 @@ class FaqModule extends Module
         return true;
     }
 
-    public function removeAdminTab(){
+    public function removeAdminTab()
+    {
         $tab = new Tab(Configuration::get('FAQ_MODULE_TAB_ID'));
 
         $tab->delete();
         Configuration::deleteByName('FAQ_MODULE_TAB_ID');
 
         return true;
+    }
+
+    public function hookDisplayHeader()
+    {
+        $this->context->controller->addCSS(dirname(__FILE__) . '/css/main.css');
+        $this->context->controller->addJS(dirname(__FILE__) . '/js/main.js');
     }
 
     public function hookDisplayProductTab()

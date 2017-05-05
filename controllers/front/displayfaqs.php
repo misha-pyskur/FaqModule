@@ -27,7 +27,6 @@ class faqmoduleDisplayfaqsModuleFrontController extends ModuleFrontControllerCor
 
             $this->setTemplate('faq_show.tpl');
         } else {
-            //d($_GET);
             $all_faqs = $this->model->getResults();
             $this->context->smarty->assign(
                 array(
@@ -37,5 +36,18 @@ class faqmoduleDisplayfaqsModuleFrontController extends ModuleFrontControllerCor
 
             $this->setTemplate('faq_index.tpl');
         }
+    }
+
+
+    public function displayAjax()
+    {
+
+        $this->objectmodel->question[1] = Tools::getValue('question');
+        $this->objectmodel->associated_products[] = Tools::getValue('id_product');
+        if(!$this->objectmodel->add()) {
+            return 'ERROR';
+        }
+
+        die($this->context->smarty->fetch(__DIR__ . '/../../views/templates/hook/product.tpl'));
     }
 }
