@@ -208,7 +208,9 @@ class FaqModule extends Module
     public function hookDisplayHeader()
     {
         $this->context->controller->addCSS(dirname(__FILE__) . '/css/main.css');
+        $this->context->controller->addCSS(dirname(__FILE__) . '/css/modal.css');
         $this->context->controller->addJS(dirname(__FILE__) . '/js/main.js');
+        $this->context->controller->addJS(dirname(__FILE__) . '/js/modal.js');
     }
 
     public function hookDisplayProductTab()
@@ -220,9 +222,12 @@ class FaqModule extends Module
             $thisAssociatedQuestions = array();
             foreach ($all_faqs as $key => $faqObject) {
                 if ($faqObject->associated_products !== 'N;') {
-                    foreach (unserialize($faqObject->associated_products) as $item) {
-                        if ($item === $thisProduct) {
-                            array_push($thisAssociatedQuestions, $faqObject);
+                    $associated_products = unserialize($faqObject->associated_products);
+                    if (is_array($associated_products)) {
+                        foreach ($associated_products as $item) {
+                            if ($item === $thisProduct) {
+                                array_push($thisAssociatedQuestions, $faqObject);
+                            }
                         }
                     }
                 }

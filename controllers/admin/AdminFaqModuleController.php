@@ -91,11 +91,13 @@ class AdminFaqModuleController extends ModuleAdminController
                         'type'     => 'text',
                         'label'    => $this->l('Friendly URL'),
                         'name'     => 'friendly_url',
+                        'required' => true
                     ),
                     'active' => array(
                         'type'   => 'switch',
                         'label'  => $this->l('Active'),
                         'name'   => 'active',
+                        'required' => true,
                         'values' => array(
                             array(
                                 'id'    => 'active_on',

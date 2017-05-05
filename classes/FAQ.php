@@ -16,7 +16,7 @@ class FAQ extends ObjectModel
         'fields' => array(
             'question' => array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true),
             'answer' => array('type' => self::TYPE_STRING, 'lang' => true),
-            'friendly_url' => array('type' => self::TYPE_STRING),
+            'friendly_url' => array('type' => self::TYPE_STRING, 'size' => 255),
             'active' => array('type' => self::TYPE_BOOL),
             'associated_products' => array('type' => self::TYPE_STRING)
         )
