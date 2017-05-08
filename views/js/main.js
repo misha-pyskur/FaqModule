@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    var hostName = window.location.hash;
     var url = window.location.href;
 
     function getProductId(url) {
@@ -13,7 +14,7 @@ $(document).ready(function() {
         if ($("#questionField").val().length > 1) {
             $.ajax({
                 method: "POST",
-                url: "http://localhost/module/faqmodule/displayfaqs",
+                url: hostName + "/module/faqmodule/displayfaqs",
                 data: {
                     question: $("#questionField").val(),
                     friendly_url: "add_question",
@@ -23,7 +24,7 @@ $(document).ready(function() {
             }).done(function(data) {
                 $("#addQuestionModal").modal("hide");
                 $("#questionField").val("");
-                alert(data);
+                alert("Success");
             }).fail(function(data) {
                 alert("Something went wrong!");
             });
